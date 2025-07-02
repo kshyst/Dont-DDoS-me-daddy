@@ -6,8 +6,8 @@ type ReqData struct {
 }
 
 type RedisSaveData struct {
-	ipAddr     string
-	url        string
-	timeStamp  int64
-	expiration int
+	IPAddr     string `json:"ipAddr"`
+	URL        string `json:"url"`
+	TimeStamp  int64  `json:"timeStamp"`
+	Expiration int    `json:"expiration"` // in seconds
 }
