@@ -32,4 +32,12 @@ func (handler *Handler) Handle(w http.ResponseWriter, r *http.Request) {
 		}
 	}(r.Body)
 
+	//check the request validation
+	rateAcceptation := handler.service.CheckAndStoreRate(r.Context(), reqData)
+
+	if rateAcceptation {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusTooManyRequests)
+	}
 }
