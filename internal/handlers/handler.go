@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"io"
-	"main/internal/models"
-	"main/internal/services"
 	"net/http"
 )
 

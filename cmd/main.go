@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	"github.com/kshyst/Dont-DDoS-me-daddy/db"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/handlers"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"log"
-	"main/db"
-	"main/internal/handlers"
-	"main/internal/services"
 	"net/http"
 	"os"
 )

@@ -2,9 +2,9 @@ package services
 
 import (
 	"context"
+	"github.com/kshyst/Dont-DDoS-me-daddy/db"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"log"
-	"main/db"
-	"main/internal/models"
 	"os"
 	"strconv"
 	"time"

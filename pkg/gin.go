@@ -3,9 +3,9 @@ package pkg
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"main/db"
-	"main/internal/models"
-	"main/internal/services"
+	"github.com/kshyst/Dont-DDoS-me-daddy/db"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 )
 
 func MyCustomMiddleware() gin.HandlerFunc {

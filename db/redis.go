@@ -3,8 +3,8 @@ package db
 import (
 	"context"
 	"encoding/json"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"github.com/redis/go-redis/v9"
-	"main/internal/models"
 	"time"
 )
 
