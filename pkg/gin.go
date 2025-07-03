@@ -8,12 +8,14 @@ import (
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 )
 
-func MyCustomMiddleware() gin.HandlerFunc {
+func GinRateLimiter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("processing request in middleware")
 
 		clientIP := c.ClientIP()
 		requestedURL := c.Request.RequestURI
+
+		fmt.Println(clientIP, requestedURL)
 
 		requestData := &models.ReqData{
 			UserIp:         clientIP,
