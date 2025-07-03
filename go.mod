@@ -1,4 +1,4 @@
-module main
+module github.com/kshyst/Dont-DDoS-me-daddy
 
 go 1.24.4
 
