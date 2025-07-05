@@ -2,48 +2,45 @@ package Daddy
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"github.com/redis/go-redis/v9"
+	"net/http"
 	"time"
 )
 
 func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//TODO : here we use empty context which is bad smell and should be using the passed context but the
-		// passed context is timeouting soon
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		// Create a child context with timeout that inherits from the request context
+		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()
-		c.Request = c.Request.WithContext(ctx)
 
-		clientIP := c.ClientIP()
-		requestedURL := c.Request.RequestURI
-
-		requestData := &models.ReqData{
-			UserIp:         clientIP,
-			RequestAddress: requestedURL,
-		}
-
-		// check redis client availability
-		if err := redisClient.Ping(c.Request.Context()).Err(); err != nil {
-			c.AbortWithStatusJSON(500, gin.H{"error": "Redis unavailable"})
+		// Check Redis availability first
+		if err := redisClient.Ping(ctx).Err(); err != nil {
+			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
+				"error": "Rate limiting service unavailable",
+			})
 			return
 		}
 
-		service := services.NewService(db.CreateRedis(redisClient))
-
-		rateLimitRes := service.CheckAndStoreRate(c.Request.Context(), requestData)
-
-		if rateLimitRes {
-			c.Next()
-		} else {
-			c.Status(429)
-			c.Abort()
+		// Prepare request data
+		requestData := &models.ReqData{
+			UserIp:         c.ClientIP(),
+			RequestAddress: c.Request.RequestURI,
 		}
 
-		fmt.Println("request processed in middleware")
+		// Create service instance
+		service := services.NewService(db.CreateRedis(redisClient))
+
+		// Check rate limit
+		if allowed := service.CheckAndStoreRate(ctx, requestData); !allowed {
+			c.AbortWithStatus(http.StatusTooManyRequests)
+			return
+		}
+
+		// ez pz middleware done it's thing
+		c.Next()
 	}
 }
