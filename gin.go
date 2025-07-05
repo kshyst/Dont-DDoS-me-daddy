@@ -16,11 +16,15 @@ func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 		clientIP := c.ClientIP()
 		requestedURL := c.Request.RequestURI
 
-		fmt.Println(clientIP, requestedURL)
-
 		requestData := &models.ReqData{
 			UserIp:         clientIP,
 			RequestAddress: requestedURL,
+		}
+
+		// check redis client availability
+		if err := redisClient.Ping(c.Request.Context()).Err(); err != nil {
+			c.AbortWithStatusJSON(500, gin.H{"error": "Redis unavailable"})
+			return
 		}
 
 		service := services.NewService(db.CreateRedis(redisClient))
