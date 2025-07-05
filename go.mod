@@ -5,6 +5,7 @@ go 1.24.4
 require (
 	github.com/gin-gonic/gin v1.10.1
 	github.com/joho/godotenv v1.5.1
+	github.com/mcuadros/go-defaults v1.2.0
 	github.com/redis/go-redis/v9 v9.11.0
 )
 

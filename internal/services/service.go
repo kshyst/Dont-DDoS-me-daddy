@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
+	"github.com/mcuadros/go-defaults"
 	"log"
 	"time"
 )
@@ -24,6 +25,9 @@ func NewService(redis db.Redis, opts ...Option) *Service {
 		Redis: redis,
 	}
 
+	//setting defaults
+	defaults.SetDefaults(s)
+
 	//Applying all options given for the service
 	for _, opt := range opts {
 		opt(s)
@@ -33,9 +37,7 @@ func NewService(redis db.Redis, opts ...Option) *Service {
 }
 
 func (service *Service) CheckAndStoreRate(ctx context.Context, reqData *models.ReqData) bool {
-	//TODO hard coded time
-	//requestTimeout, _ := strconv.Atoi(os.Getenv("REQUEST_TIMEOUT"))
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 200*time.Second)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(service.RequestTimeout)*time.Second)
 	defer cancel()
 
 	now := time.Now().Unix()
