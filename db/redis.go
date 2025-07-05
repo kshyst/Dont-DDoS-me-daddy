@@ -19,6 +19,10 @@ func NewRedis() (Redis, error) {
 	return Redis{redisClient}, nil
 }
 
+func CreateRedis(redisClient *redis.Client) Redis {
+	return Redis{redisClient}
+}
+
 func (r *Redis) StoreToSortedList(ctx context.Context, key string, value *models.RedisSaveData) *redis.IntCmd {
 	score := float64(value.TimeStamp)
 

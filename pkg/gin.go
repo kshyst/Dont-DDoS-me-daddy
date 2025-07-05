@@ -6,9 +6,10 @@ import (
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
+	"github.com/redis/go-redis/v9"
 )
 
-func GinRateLimiter() gin.HandlerFunc {
+func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("processing request in middleware")
 
@@ -22,8 +23,7 @@ func GinRateLimiter() gin.HandlerFunc {
 			RequestAddress: requestedURL,
 		}
 
-		redis, _ := db.NewRedis()
-		service := services.NewService(redis)
+		service := services.NewService(db.CreateRedis(redisClient))
 
 		rateLimitRes := service.CheckAndStoreRate(c.Request.Context(), requestData)
 
