@@ -23,6 +23,7 @@ func NewService(redis db.Redis) Service {
 }
 
 func (service *Service) CheckAndStoreRate(ctx context.Context, reqData *models.ReqData) bool {
+	//TODO hard coded time
 	//requestTimeout, _ := strconv.Atoi(os.Getenv("REQUEST_TIMEOUT"))
 	ctxWithTimeout, cancel := context.WithTimeout(ctx, 200*time.Second)
 	defer cancel()
