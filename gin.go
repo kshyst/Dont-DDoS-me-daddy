@@ -2,6 +2,7 @@ package Daddy
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
@@ -13,9 +14,11 @@ import (
 
 func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Println("started processing request for: " + c.ClientIP())
 		// Create a child context with timeout that inherits from the request context
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()
+		c.Request = c.Request.WithContext(ctx)
 
 		// Check Redis availability first
 		if err := redisClient.Ping(ctx).Err(); err != nil {
