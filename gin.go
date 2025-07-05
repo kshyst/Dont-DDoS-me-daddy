@@ -1,4 +1,4 @@
-package pkg
+package Rate_Limiter
 
 import (
 	"fmt"
