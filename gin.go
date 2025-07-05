@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
+func GinRateLimiter(redisClient *redis.Client, options ...services.Option) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Create a child context with timeout that inherits from the request context
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
@@ -33,7 +33,7 @@ func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 		}
 
 		// Create service instance
-		service := services.NewService(db.CreateRedis(redisClient))
+		service := services.NewService(db.CreateRedis(redisClient), options...)
 
 		// Check rate limit
 		if allowed := service.CheckAndStoreRate(ctx, requestData); !allowed {

@@ -67,7 +67,7 @@ func (service *Service) CheckAndStoreRate(ctx context.Context, reqData *models.R
 		}
 
 		if requestCounter >= service.AllowedRequestCount {
-			log.Printf("rate limit exceeded for user %s", reqData.UserIp)
+			log.Printf("rate limit exceeded for user %s . The allowed request count is %v", reqData.UserIp, service.AllowedRequestCount)
 			return false
 		}
 		return true
