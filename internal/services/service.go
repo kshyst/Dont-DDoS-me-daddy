@@ -5,8 +5,6 @@ import (
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"log"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -25,8 +23,8 @@ func NewService(redis db.Redis) Service {
 }
 
 func (service *Service) CheckAndStoreRate(ctx context.Context, reqData *models.ReqData) bool {
-	requestTimeout, _ := strconv.Atoi(os.Getenv("REQUEST_TIMEOUT"))
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Duration(requestTimeout)*time.Second)
+	//requestTimeout, _ := strconv.Atoi(os.Getenv("REQUEST_TIMEOUT"))
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 200*time.Second)
 	defer cancel()
 
 	now := time.Now().Unix()
