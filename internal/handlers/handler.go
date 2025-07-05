@@ -2,17 +2,17 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
-	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"io"
 	"net/http"
 )
 
 type Handler struct {
-	service services.Service
+	service internal.Service
 }
 
-func NewHandler(service services.Service) *Handler {
+func NewHandler(service internal.Service) *Handler {
 	return &Handler{service: service}
 }
 

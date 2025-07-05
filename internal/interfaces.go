@@ -1,8 +1,13 @@
 package internal
 
-import "net/http"
+import (
+	"context"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
+	"net/http"
+)
 
 type Service interface {
+	CheckAndStoreRate(ctx context.Context, reqData *models.ReqData) bool
 }
 
 type Handler interface {

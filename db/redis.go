@@ -62,7 +62,7 @@ func (r *Redis) StoreToSortedList(ctx context.Context, key string, value *models
 func (r *Redis) GetSortedList(ctx context.Context, key string) ([]*models.RedisSaveData, error) {
 	results, err := r.redisClient.ZRange(ctx, key, 0, -1).Result()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get data using zrange: %w", err)
 	}
 
 	var items []*models.RedisSaveData
