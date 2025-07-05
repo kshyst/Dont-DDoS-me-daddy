@@ -41,7 +41,7 @@ func (service *Service) CheckAndStoreRate(ctx context.Context, reqData *models.R
 
 	//Get the requester data from redis
 	if requesterInRedis, errGettingData := service.Redis.GetSortedList(ctxWithTimeout, reqData.UserIp); errGettingData != nil {
-		log.Println(errGettingData)
+		log.Println("error : Redis failed to get the requesters list : ", errGettingData)
 		return false
 	} else if requesterInRedis == nil {
 		return true

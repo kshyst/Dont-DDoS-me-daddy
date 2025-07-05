@@ -39,7 +39,7 @@ func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 
 		// Check rate limit
 		if allowed := service.CheckAndStoreRate(ctx, requestData); !allowed {
-			c.AbortWithStatus(http.StatusConflict)
+			c.AbortWithStatus(http.StatusTooManyRequests)
 			return
 		}
 
