@@ -7,11 +7,15 @@ import (
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"github.com/redis/go-redis/v9"
+	"time"
 )
 
 func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Println("processing request in middleware")
+		start := time.Now()
+		defer func() {
+			fmt.Printf("Middleware execution time: %v\n", time.Since(start))
+		}()
 
 		clientIP := c.ClientIP()
 		requestedURL := c.Request.RequestURI
