@@ -1,6 +1,7 @@
-package Rate_Limiter
+package Daddy
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
@@ -12,10 +13,11 @@ import (
 
 func GinRateLimiter(redisClient *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		start := time.Now()
-		defer func() {
-			fmt.Printf("Middleware execution time: %v\n", time.Since(start))
-		}()
+		//TODO : here we use empty context which is bad smell and should be using the passed context but the
+		// passed context is timeouting soon
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		c.Request = c.Request.WithContext(ctx)
 
 		clientIP := c.ClientIP()
 		requestedURL := c.Request.RequestURI
