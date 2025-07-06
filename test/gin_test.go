@@ -40,8 +40,8 @@ func TestGinMiddleware(t *testing.T) {
 
 	time.Sleep(5 * time.Second)
 
-	// making the url ratelimiter activated
-	for i := 0; i < allowedRequestCount+10; i++ {
+	// making the url rate limiter activated
+	for i := 0; i < allowedRequestCount; i++ {
 		time.Sleep(2 * time.Second)
 		_, err := http.Get("http://127.0.0.1:8081/test")
 		if err != nil {
@@ -49,7 +49,7 @@ func TestGinMiddleware(t *testing.T) {
 		}
 	}
 
-	// send a request to be rate limted
+	// send a request to be rate limited
 	get, err := http.Get("http://127.0.0.1:8081/test")
 	if err != nil {
 		t.Errorf("Could not execute GET request to check the middleware: %v", err)
