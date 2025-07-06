@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-func RateLimiter(next http.Handler, redisClient *redis.Client, options ...services.Option) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func RateLimiter(next http.HandlerFunc, redisClient *redis.Client, options ...services.Option) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		// Create the context with 10 second timeout
 		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 		defer cancel()
@@ -28,6 +28,7 @@ func RateLimiter(next http.Handler, redisClient *redis.Client, options ...servic
 		if err != nil {
 			w.WriteHeader(http.StatusFailedDependency)
 			w.Write([]byte(err.Error()))
+			return
 		}
 
 		requestData := &models.ReqData{
@@ -47,5 +48,5 @@ func RateLimiter(next http.Handler, redisClient *redis.Client, options ...servic
 
 		// Goes to the next handler
 		next.ServeHTTP(w, r)
-	})
+	}
 }
