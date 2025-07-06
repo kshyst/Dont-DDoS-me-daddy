@@ -14,7 +14,7 @@ type Service struct {
 	WindowLength        int `default:"60"`
 	AllowedRequestCount int `default:"5"`
 	Expiration          int `default:"60"`
-	RequestTimeout      int `default:"60"`
+	RequestTimeout      int `default:"300"`
 }
 
 // Option function template for giving options to middleware service
