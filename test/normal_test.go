@@ -28,7 +28,10 @@ func TestRateLimiter(t *testing.T) {
 	}
 
 	// Create and example handle func
-	http.HandleFunc("/test", Daddy.RateLimiter(exampleHandler, redisClient, Daddy.WithAllowedRequestCount(allowedRequestCount)))
+	http.HandleFunc(
+		"/test",
+		Daddy.RateLimiter(exampleHandler, redisClient, Daddy.WithAllowedRequestCount(allowedRequestCount)),
+	)
 
 	// Start an http server
 	go func() {
