@@ -27,7 +27,37 @@ In this example for wrapping up the `exampleHandler` with middleware we put it i
 ### Gin
 [Gin](https://github.com/gin-gonic/gin) usage is pretty easy :)
 ```Go
+r := gin.Default()
 r.Use(Daddy.GinRateLimiter(redisClient, Daddy.WithAllowedRequestCount(allowedRequestCount)))
 ```
 Where r is the gin engine (like `gin.Default()`).
 
+---
+
+### Echo
+[Echo](https://github.com/labstack/echo) usage is also pretty easy :
+
+```Go
+e := echo.New()
+e.Use(Daddy.EchoMiddleware(redisClient, Daddy.WithAllowedRequestCount(allowedRequestCount)))
+```
+
+> More detailed usages can be found in the test folder.
+
+---
+
+## Options
+
+Options can be added to middlewares as parameters. It is shown in the examples.
+
+### `WithWindowLength(seconds int)`
+Length of which the sliding window should check for requests from sameuser.
+
+### `WithAllowedRequestCount(count int)`
+Count of the requests that can go through in the time window set with `WithWindowLength(seconds int)`.
+
+### `WithExpiration(seconds int)`
+Sets the expiration of the requests in redis (must be larger than window length).
+
+### `WithRequestTimeout(seconds int)`
+Timeout of the context that goes through middleware.
