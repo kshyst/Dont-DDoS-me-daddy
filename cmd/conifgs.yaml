@@ -1,5 +1,0 @@
-options:
-  windowLength:60,
-  allowedRequestCount:5,
-  redisExpiration:300,
-  contextTimeout:300

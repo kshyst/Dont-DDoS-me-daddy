@@ -1,36 +1,47 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
+	Daddy "github.com/kshyst/Dont-DDoS-me-daddy"
 	"github.com/kshyst/Dont-DDoS-me-daddy/db"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/handlers"
+	"github.com/kshyst/Dont-DDoS-me-daddy/internal/models"
 	"github.com/kshyst/Dont-DDoS-me-daddy/internal/services"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
+	// Load yaml configs
+	config, loadConfigErr := models.LoadConfig("configs.yaml")
+	if loadConfigErr != nil {
+		log.Fatalf("Error loading configs.yaml : %s", loadConfigErr)
+	}
 
+	// Instantiating redis
 	userRedis, err := db.NewRedis()
 	if err != nil {
 		log.Fatal("redis failed to start")
 	}
-	userSrv := services.NewService(userRedis)
+
+	// Create service and the handler
+	userSrv := services.NewService(
+		userRedis,
+		Daddy.WithExpiration(models.GetIntOfStrings(config.Options.RedisExpiration)),
+		Daddy.WithAllowedRequestCount(models.GetIntOfStrings(config.Options.AllowedRequestCount)),
+		Daddy.WithWindowLength(models.GetIntOfStrings(config.Options.WindowLength)),
+		Daddy.WithRequestTimeout(models.GetIntOfStrings(config.Options.ContextTimeout)),
+	)
+
 	userHandler := handlers.NewHandler(userSrv)
 
-	if envLoadingError := godotenv.Load(); envLoadingError != nil {
-		log.Fatal("Error loading .env file")
-	}
-
+	// Endpoint for rate limiting
 	http.HandleFunc("/req", userHandler.Handle)
 
-	address := os.Getenv("ADDRESS")
-	port := os.Getenv("PORT")
-	err = http.ListenAndServe(address+":"+port, nil)
+	// Start the rate limiter server
+	err = http.ListenAndServe(config.Server.Address+":"+config.Server.Port, nil)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-
+	log.Println("Rate Limiter Server Started")
 }

@@ -11,9 +11,3 @@ type RedisSaveData struct {
 	TimeStamp  int64  `json:"timeStamp"`
 	Expiration int    `json:"expiration"` // in seconds
 }
-
-type Config struct {
-	RedisExpiration     int `yaml:"redis_expiration"`
-	WindowLength        int `yaml:"window_length"`
-	AllowedRequestCount int `yaml:"allowed_request_count"`
-}
