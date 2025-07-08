@@ -44,6 +44,17 @@ e.Use(Daddy.EchoMiddleware(redisClient, Daddy.WithAllowedRequestCount(allowedReq
 
 > More detailed usages can be found in the test folder.
 
+### Microservice
+There is an option to run the main.go in cmd and also use the configs.yaml file to configure options.
+
+You can then request to it with this format to check rate limitation:
+```json
+{
+    "user_ip":"1.2.3.4",
+    "request_address":"/url"
+}
+```
+
 ---
 
 ## Options
